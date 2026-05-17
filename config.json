@@ -6,18 +6,7 @@
         "password": "",
         "database": "node_mysql_api"
     },
-
     "secret": "SUPER_SECRET_KEY_REPLACE_ME_IN_PRODUCTION",
-    "emailFrom": "info@my-node-api.com",
-    "smtpOptions": {
-        "host": "smtp.ethereal.email",
-        "port": 587,
-        "auth": {
-            "user": "hilbert.hauck@ethereal.email",
-            "pass": "ht8HY1hgQ2tbu4XdWY"
-
-        }
-
-    }
-
+    "emailFrom": "onboarding@resend.dev",
+    "resendApiKey": "YOUR_RESEND_API_KEY"
 }
