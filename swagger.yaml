@@ -1,7 +1,11 @@
-openapi: 3.0.0
-info:
-  title: Node MySQL API
-  version: 1.0.0
-servers:
-  - url: http://localhost:4000
-paths: {}
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: { title: 'Node MySQL API', version: '1.0.0' },
+        servers: [
+            { url: 'https://seaborg-ipt-2026-backend.onrender.com', description: 'Production server' },
+            { url: 'http://localhost:4000', description: 'Local development server' }
+        ],
+    },
+    apis: ['./routes/*.js'], // make sure this path matches your actual routes folder
+};
