@@ -1,18 +1,17 @@
 openapi: 3.0.0
 info:
   title: Node MySQL API
-  description: Node.js + MySQL - API with email sign-up, verification, authentication and forgot password
+  description: Authentication API
   version: 1.0.0
 servers:
   - url: https://seaborg-ipt-2026-backend.onrender.com
-    description: Production server
+    description: Production
   - url: http://localhost:4000
-    description: Local development server
+    description: Local
 paths:
   /accounts/authenticate:
     post:
-      summary: Authenticate account credentials and return a JWT token and a cookie with a refresh token
-      description: Accounts must be verified before authenticating.
+      summary: Login
       operationId: authenticate
       requestBody:
         required: true
@@ -23,52 +22,40 @@ paths:
               properties:
                 email:
                   type: string
-                  example: "jason@example.com"
                 password:
                   type: string
-                  example: "pass123"
-              required:
-                - email
-                - password
+              required: [email, password]
       responses:
         "200":
-          description: Account details, a JWT access token and a refresh token cookie
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  jwtToken:
-                    type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          description: OK
         "400":
-          description: The email or password is incorrect
+          description: Invalid credentials
 
   /accounts/refresh-token:
     post:
-      summary: Use a refresh token to generate a new JWT token and a new refresh token
+      summary: Refresh token
       operationId: refreshToken
       responses:
         "200":
-          description: New JWT access token
+          description: OK
         "400":
           description: Invalid token
 
   /accounts/revoke-token:
     post:
-      summary: Revoke a refresh token
+      summary: Revoke token
       operationId: revokeToken
       security:
         - bearerAuth: []
       responses:
         "200":
-          description: Token revoked
+          description: OK
         "401":
           $ref: "#/components/responses/UnauthorizedError"
 
   /accounts/register:
     post:
-      summary: Register a new user account and send a verification email
+      summary: Register
       operationId: register
       requestBody:
         required: true
@@ -91,21 +78,14 @@ paths:
                   type: string
                 acceptTerms:
                   type: boolean
-              required:
-                - title
-                - firstName
-                - lastName
-                - email
-                - password
-                - confirmPassword
-                - acceptTerms
+              required: [title, firstName, lastName, email, password, confirmPassword, acceptTerms]
       responses:
         "200":
-          description: Registration successful
+          description: OK
 
   /accounts/verify-email:
     post:
-      summary: Verify a new account with a verification token received by email after registration
+      summary: Verify email
       operationId: verifyEmail
       requestBody:
         required: true
@@ -116,17 +96,16 @@ paths:
               properties:
                 token:
                   type: string
-              required:
-                - token
+              required: [token]
       responses:
         "200":
-          description: Verification successful
+          description: OK
         "400":
-          description: Verification failed
+          description: Failed
 
   /accounts/forgot-password:
     post:
-      summary: Submit email address to reset the password on an account
+      summary: Forgot password
       operationId: forgotPassword
       requestBody:
         required: true
@@ -137,15 +116,14 @@ paths:
               properties:
                 email:
                   type: string
-              required:
-                - email
+              required: [email]
       responses:
         "200":
-          description: Password reset email sent
+          description: OK
 
   /accounts/validate-reset-token:
     post:
-      summary: Validate the reset password token received by email
+      summary: Validate reset token
       operationId: validateResetToken
       requestBody:
         required: true
@@ -156,17 +134,16 @@ paths:
               properties:
                 token:
                   type: string
-              required:
-                - token
+              required: [token]
       responses:
         "200":
-          description: Token is valid
+          description: OK
         "400":
-          description: Token is invalid
+          description: Invalid token
 
   /accounts/reset-password:
     post:
-      summary: Reset the password for an account
+      summary: Reset password
       operationId: resetPassword
       requestBody:
         required: true
@@ -181,31 +158,26 @@ paths:
                   type: string
                 confirmPassword:
                   type: string
-              required:
-                - token
-                - password
-                - confirmPassword
+              required: [token, password, confirmPassword]
       responses:
         "200":
-          description: Password reset successful
+          description: OK
         "400":
           description: Invalid token
 
   /accounts:
     get:
-      summary: Get a list of all accounts
-      description: Restricted to admin users.
+      summary: Get all accounts
       operationId: getAllAccounts
       security:
         - bearerAuth: []
       responses:
         "200":
-          description: An array of all accounts
+          description: OK
         "401":
           $ref: "#/components/responses/UnauthorizedError"
     post:
-      summary: Create a new account
-      description: Restricted to admin users.
+      summary: Create account
       operationId: createAccount
       security:
         - bearerAuth: []
@@ -231,17 +203,10 @@ paths:
                 role:
                   type: string
                   enum: [Admin, User]
-              required:
-                - title
-                - firstName
-                - lastName
-                - email
-                - password
-                - confirmPassword
-                - role
+              required: [title, firstName, lastName, email, password, confirmPassword, role]
       responses:
         "200":
-          description: Account created successfully
+          description: OK
         "401":
           $ref: "#/components/responses/UnauthorizedError"
 
@@ -253,19 +218,19 @@ paths:
         schema:
           type: string
     get:
-      summary: Get a single account by id
+      summary: Get account
       operationId: getAccountById
       security:
         - bearerAuth: []
       responses:
         "200":
-          description: Account details
+          description: OK
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     put:
-      summary: Update an account
+      summary: Update account
       operationId: updateAccount
       security:
         - bearerAuth: []
@@ -293,19 +258,19 @@ paths:
                   enum: [Admin, User]
       responses:
         "200":
-          description: Account updated successfully
+          description: OK
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           $ref: "#/components/responses/NotFoundError"
     delete:
-      summary: Delete an account
+      summary: Delete account
       operationId: deleteAccount
       security:
         - bearerAuth: []
       responses:
         "200":
-          description: Account deleted successfully
+          description: OK
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
@@ -319,22 +284,6 @@ components:
       bearerFormat: JWT
   responses:
     UnauthorizedError:
-      description: Access token is missing or invalid
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "Unauthorized"
+      description: Unauthorized
     NotFoundError:
       description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "Not Found"
