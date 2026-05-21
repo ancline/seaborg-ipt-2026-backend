@@ -97,16 +97,16 @@ async function register(params: any, origin: any) {
     const isFirstAccount = allAccounts.length === 0;
 
     await db.insert(accounts).values({
-        title: params.title,
-        firstName: params.firstName,
-        lastName: params.lastName,
-        email: params.email,
-        role: isFirstAccount ? Role.Admin : Role.User,
-        verificationToken: randomTokenString(),
-        passwordHash: await hash(params.password),
-        created: new Date()
-        
-    });
+    title: params.title,
+    firstName: params.firstName,
+    lastName: params.lastName,
+    email: params.email,
+    role: isFirstAccount ? Role.Admin : Role.User,
+    verificationToken: randomTokenString(),
+    passwordHash: await hash(params.password),
+    acceptTerms: !!params.acceptTerms,  
+    created: new Date()
+});
 
     const [account] = await db.select().from(accounts)
         .where(eq(accounts.email, params.email));
