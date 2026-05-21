@@ -11,6 +11,7 @@ export const accounts = sqliteTable('accounts', {
     email: text('email').notNull().unique(),
     role: text('role').notNull().default('User'),
     passwordHash: text('password_hash').notNull(),
+    acceptTerms: integer('accept_terms', { mode: 'boolean' }),
     verificationToken: text('verification_token'),
     verified: integer('verified', { mode: 'timestamp' }),
     resetToken: text('reset_token'),
@@ -18,7 +19,6 @@ export const accounts = sqliteTable('accounts', {
     passwordReset: integer('password_reset', { mode: 'timestamp' }),
     created: integer('created', { mode: 'timestamp' }).notNull(),
     updated: integer('updated', { mode: 'timestamp' }),
-    isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
 });
 
 export const refreshTokens = sqliteTable('refresh_tokens', {
