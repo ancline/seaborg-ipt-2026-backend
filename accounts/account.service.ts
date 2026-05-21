@@ -57,7 +57,7 @@ async function refreshToken({ token, ipAddress }: any) {
     const newRefreshToken = generateRefreshTokenData(account, ipAddress);
 
     await db.update(refreshTokens).set({
-        revoked: new Date(),
+        revoked: new Date().toISOString(),
         revokedByIp: ipAddress,
         replacedByToken: newRefreshToken.token
     }).where(eq(refreshTokens.token, token));
@@ -80,7 +80,7 @@ async function revokeToken({ token, ipAddress }: any) {
     if (!existingToken || !isTokenActive(existingToken)) throw 'Invalid token';
 
     await db.update(refreshTokens).set({
-        revoked: new Date(),
+        revoked: new Date().toISOString(),
         revokedByIp: ipAddress
     }).where(eq(refreshTokens.token, token));
 }
@@ -97,16 +97,16 @@ async function register(params: any, origin: any) {
     const isFirstAccount = allAccounts.length === 0;
 
     await db.insert(accounts).values({
-    title: params.title,
-    firstName: params.firstName,
-    lastName: params.lastName,
-    email: params.email,
-    role: isFirstAccount ? Role.Admin : Role.User,
-    verificationToken: randomTokenString(),
-    passwordHash: await hash(params.password),
-    acceptTerms: !!params.acceptTerms,  
-    created: new Date()
-});
+        title: params.title,
+        firstName: params.firstName,
+        lastName: params.lastName,
+        email: params.email,
+        role: isFirstAccount ? Role.Admin : Role.User,
+        verificationToken: randomTokenString(),
+        passwordHash: await hash(params.password),
+        acceptTerms: !!params.acceptTerms,
+        created: new Date().toISOString()
+    });
 
     const [account] = await db.select().from(accounts)
         .where(eq(accounts.email, params.email));
@@ -121,7 +121,7 @@ async function verifyEmail({ token }: any) {
     if (!account) throw 'Verification failed';
 
     await db.update(accounts).set({
-        verified: new Date(),
+        verified: new Date().toISOString(),
         verificationToken: null
     }).where(eq(accounts.id, account.id));
 }
@@ -134,7 +134,7 @@ async function forgotPassword({ email }: any, origin: any) {
 
     await db.update(accounts).set({
         resetToken: randomTokenString(),
-        resetTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        resetTokenExpires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     }).where(eq(accounts.id, account.id));
 
     const [updated] = await db.select().from(accounts)
@@ -147,7 +147,7 @@ async function validateResetToken({ token }: any) {
     const [account] = await db.select().from(accounts).where(
         and(
             eq(accounts.resetToken, token),
-            gt(accounts.resetTokenExpires, new Date())
+            gt(accounts.resetTokenExpires, new Date().toISOString())
         )
     );
 
@@ -160,7 +160,7 @@ async function resetPassword({ token, password }: any) {
 
     await db.update(accounts).set({
         passwordHash: await hash(password),
-        passwordReset: new Date(),
+        passwordReset: new Date().toISOString(),
         resetToken: null,
         resetTokenExpires: null
     }).where(eq(accounts.id, account.id));
@@ -189,9 +189,8 @@ async function create(params: any) {
         email: params.email,
         role: params.role ?? Role.User,
         passwordHash: await hash(params.password),
-        verified: new Date(),
-        created: new Date()
-        
+        verified: new Date().toISOString(),
+        created: new Date().toISOString()
     });
 
     const [account] = await db.select().from(accounts)
@@ -215,7 +214,7 @@ async function update(id: any, params: any) {
 
     await db.update(accounts).set({
         ...params,
-        updated: new Date()
+        updated: new Date().toISOString()
     }).where(eq(accounts.id, id));
 
     const [updated] = await db.select().from(accounts)
@@ -246,8 +245,8 @@ function generateRefreshTokenData(account: any, ipAddress: any) {
     return {
         accountId: account.id,
         token: randomTokenString(),
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        created: new Date(),
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        created: new Date().toISOString(),
         createdByIp: ipAddress,
     };
 }

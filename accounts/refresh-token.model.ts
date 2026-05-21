@@ -5,10 +5,10 @@ export const refreshTokens = sqliteTable('refresh_tokens', {
     id: integer('id').primaryKey({ autoIncrement: true }),
     accountId: integer('account_id').notNull().references(() => accounts.id),
     token: text('token').notNull(),
-    expires: integer('expires', { mode: 'timestamp' }).notNull(),
-    created: integer('created', { mode: 'timestamp' }).notNull(),
+    expires: text('expires').notNull(),
+    created: text('created').notNull(),
     createdByIp: text('created_by_ip'),
-    revoked: integer('revoked', { mode: 'timestamp' }),
+    revoked: text('revoked'),
     revokedByIp: text('revoked_by_ip'),
     replacedByToken: text('replaced_by_token'),
 });
