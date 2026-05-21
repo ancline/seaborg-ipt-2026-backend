@@ -16,5 +16,4 @@ export const accounts = sqliteTable('accounts', {
     passwordReset: integer('password_reset', { mode: 'timestamp' }),
     created: integer('created', { mode: 'timestamp' }).notNull(),
     updated: integer('updated', { mode: 'timestamp' }),
-    isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
 });
