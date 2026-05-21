@@ -1,31 +1,33 @@
 {
-  "name": "mysql-api",
+  "name": "seaborg-ipt-2026-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "start:dev": "nodemon -exec ts-node ./server.ts"
-},
+    "start:dev": "nodemon -exec ts-node ./server.ts",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.44.0",
     "express": "^5.2.1",
     "express-jwt": "^8.5.1",
     "joi": "^18.1.2",
     "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.22.1",
     "nodemailer": "^8.0.5",
     "resend": "^6.12.3",
-    "sequelize": "^6.37.8",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
@@ -40,6 +42,7 @@
     "@types/nodemailer": "^8.0.0",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/yamljs": "^0.2.34",
+    "drizzle-kit": "^0.30.0",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"

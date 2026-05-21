@@ -1,12 +1,9 @@
 {
-    "database": {
-        "host": "localhost",
-        "port": 3306,
-        "user": "root",
-        "password": "",
-        "database": "node_mysql_api"
-    },
-    "secret": "SUPER_SECRET_KEY_REPLACE_ME_IN_PRODUCTION",
-    "emailFrom": "onboarding@resend.dev",
-    "resendApiKey": "YOUR_RESEND_API_KEY"
+  "turso": {
+    "url": "file:local.db",
+    "authToken": ""
+  },
+  "secret": "your-jwt-secret",
+  "emailFrom": "noreply@example.com",
+  "resendApiKey": "your-resend-api-key"
 }

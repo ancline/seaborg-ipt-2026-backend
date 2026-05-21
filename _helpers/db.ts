@@ -1,35 +1,41 @@
+import { drizzle } from 'drizzle-orm/libsql';
+import { createClient } from '@libsql/client';
+import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 import config from '../config';
-import { Sequelize } from 'sequelize';
-import accountModel from '../accounts/account.model';
-import refreshTokenModel from '../accounts/refresh-token.model';
 
-const db: any = {};
-export default db;
+export const accounts = sqliteTable('accounts', {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    title: text('title'),
+    firstName: text('first_name').notNull(),
+    lastName: text('last_name').notNull(),
+    email: text('email').notNull().unique(),
+    role: text('role').notNull().default('User'),
+    passwordHash: text('password_hash').notNull(),
+    verificationToken: text('verification_token'),
+    verified: integer('verified', { mode: 'timestamp' }),
+    resetToken: text('reset_token'),
+    resetTokenExpires: integer('reset_token_expires', { mode: 'timestamp' }),
+    passwordReset: integer('password_reset', { mode: 'timestamp' }),
+    created: integer('created', { mode: 'timestamp' }).notNull(),
+    updated: integer('updated', { mode: 'timestamp' }),
+    isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
+});
 
-initialize();
+export const refreshTokens = sqliteTable('refresh_tokens', {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    accountId: integer('account_id').notNull().references(() => accounts.id),
+    token: text('token').notNull(),
+    expires: integer('expires', { mode: 'timestamp' }).notNull(),
+    created: integer('created', { mode: 'timestamp' }).notNull(),
+    createdByIp: text('created_by_ip'),
+    revoked: integer('revoked', { mode: 'timestamp' }),
+    revokedByIp: text('revoked_by_ip'),
+    replacedByToken: text('replaced_by_token'),
+});
 
-async function initialize() {
-    const { host, port, user, password, database } = config.database;
+const client = createClient({
+    url: config.turso.url,
+    authToken: config.turso.authToken,
+});
 
-    // Remove the mysql.createConnection entirely - DB already exists
-    
-    const sequelize = new Sequelize(database, user, password, {
-        host,
-        port,
-        dialect: 'mysql',
-        pool: {
-            max: 3,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
-        }
-    });
-
-    db.Account = accountModel(sequelize);
-    db.RefreshToken = refreshTokenModel(sequelize);
-
-    db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
-    db.RefreshToken.belongsTo(db.Account);
-
-    await sequelize.sync();
-}
+export const db = drizzle(client, { schema: { accounts, refreshTokens } });
