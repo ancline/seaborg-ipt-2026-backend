@@ -104,8 +104,8 @@ async function register(params: any, origin: any) {
         role: isFirstAccount ? Role.Admin : Role.User,
         verificationToken: randomTokenString(),
         passwordHash: await hash(params.password),
-        created: new Date(),
-        isActive: true,
+        created: new Date()
+        
     });
 
     const [account] = await db.select().from(accounts)
@@ -190,8 +190,8 @@ async function create(params: any) {
         role: params.role ?? Role.User,
         passwordHash: await hash(params.password),
         verified: new Date(),
-        created: new Date(),
-        isActive: true,
+        created: new Date()
+        
     });
 
     const [account] = await db.select().from(accounts)
