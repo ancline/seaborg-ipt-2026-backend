@@ -1,14 +1,24 @@
-import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
-import { accounts } from './account.model';
+import { DataTypes } from 'sequelize';
 
-export const refreshTokens = sqliteTable('refresh_tokens', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
-    accountId: integer('account_id').notNull().references(() => accounts.id),
-    token: text('token').notNull(),
-    expires: text('expires').notNull(),
-    created: text('created').notNull(),
-    createdByIp: text('created_by_ip'),
-    revoked: text('revoked'),
-    revokedByIp: text('revoked_by_ip'),
-    replacedByToken: text('replaced_by_token'),
-});
+export default function model(sequelize: any) {
+    const attributes = {
+        token: { type: DataTypes.STRING },
+        expires: { type: DataTypes.DATE },
+        created: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+        createdByIp: { type: DataTypes.STRING },
+        revoked: { type: DataTypes.DATE },
+        revokedByIp: { type: DataTypes.STRING },
+        replacedByToken: { type: DataTypes.STRING },
+        isExpired: {
+            type: DataTypes.VIRTUAL,
+            get() { return Date.now() >= (this as any).expires; }
+        },
+        isActive: {
+            type: DataTypes.VIRTUAL,
+            get() { return !(this as any).revoked && !(this as any).isExpired; }
+        }
+    };
+
+    const options = { timestamps: false };
+    return sequelize.define('refreshToken', attributes, options);
+}

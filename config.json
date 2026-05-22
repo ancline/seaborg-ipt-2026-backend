@@ -1,9 +1,12 @@
 {
-  "turso": {
-    "url": "file:local.db",
-    "authToken": ""
+  "database": {
+    "host": "153.92.15.31",
+    "port": 3306,
+    "user": "u875409848_2026",
+    "password": "b$NkxatG9",
+    "database": "u875409848_2026"
   },
-  "secret": "your-jwt-secret",
-  "emailFrom": "noreply@example.com",
-  "resendApiKey": "your-resend-api-key"
+  "secret": "seaborg_super_secret_2026",
+  "emailFrom": "onboarding@resend.dev",
+  "resendApiKey": "re_JfZWeSAQ_4YD7wCJKL4MaLMGuW2rKyRud"
 }

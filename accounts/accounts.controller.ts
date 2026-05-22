@@ -225,9 +225,7 @@ function _delete(req: any, res: any, next: any) {
 function setTokenCookie(res: any, token: any) {
     const cookieOptions = {
         httpOnly: true,
-        expires: new Date(Date.now() + 7*24*60*60*1000),
-        sameSite: 'none' as const,   // ← add this
-        secure: true                  // ← add this (required with sameSite: none)
+        expires: new Date(Date.now() + 7*24*60*60*1000)
     };
     res.cookie('refreshToken', token, cookieOptions);
 }
